@@ -33,25 +33,40 @@ import datetime
 # create a recognizer object
 r = sr.Recognizer()
 
-# use the default microphone as the audio source
-with sr.Microphone() as source:
-    print("Say something!")
-    audio = r.listen(source)
+while True:
+    # use the default microphone as the audio source
+    with sr.Microphone() as source:
+        print("Say something!")
+        audio = r.listen(source)
+    
+    # recognize speech using Google Speech Recognition
+    try:
+        text = r.recognize_google(audio)
+        if "quit" in text:
+            print("Quitting the program...")
+            break
+        elif "time" in text or "hour" in text:
+            now = datetime.datetime.now()
 
-# recognize speech using Google Speech Recognition
-try:
-    text = r.recognize_google(audio)
-    if "what time is it" in text:
-        # get the current time
-        now = datetime.datetime.now()
-
-        # convert the current time to a string
-        time_str = now.strftime("%I:%M %p")
-
-        # define the text you want to convert to speech
-        text = "The time is " + time_str
-
-        # create an
-          
+            # convert the current time to a string
+            time_str = now.strftime("%I:%M %p")
+        
+            # define the text you want to convert to speech
+            text = "The time is " + time_str
             
+            print(text)
             
+            # create an instance of gTTS class
+            tts = gTTS(text=text, lang='en')
+    
+            # save the audio file
+            tts.save("time.mp3")
+    
+            # play the audio file
+            os.system("mpg321 time.mp3")
+        else:
+            print("Sorry, I didn't understand what you said.")
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
