@@ -1,10 +1,4 @@
 """
-Created on Tue Feb 21 08:25:39 2023
-
-@author: nizar
-"""
-
-"""
 import speech_recognition as sr
 import openai
 import pyaudio
@@ -18,17 +12,12 @@ from gtts import gTTS
 import os
 import time
 import playsound
-
-def speak(text):
-    tts = gTTS(text=text, lang='en')
-    filename = 'voice.mp3'
-    tts.save(filename)
-    playsound.playsound(filename)
-  """
+"""
 import speech_recognition as sr
 from gtts import gTTS
-import os
+from playsound import playsound
 import datetime
+import os
 
 # create a recognizer object
 r = sr.Recognizer()
@@ -55,15 +44,17 @@ while True:
             text = "The time is " + time_str
             
             print(text)
+            # define the full file path
+            file_path = os.path.join(os.getcwd(), "time.mp3")
             
             # create an instance of gTTS class
             tts = gTTS(text=text, lang='en')
-    
+            
             # save the audio file
-            tts.save("time.mp3")
-    
+            tts.save(file_path)
+            
             # play the audio file
-            os.system("mpg321 time.mp3")
+            playsound(file_path)
         else:
             print("Sorry, I didn't understand what you said.")
     except sr.UnknownValueError:
